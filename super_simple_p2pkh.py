@@ -53,7 +53,8 @@ def main():
     print()
     print("  They send coins to your address: " + str(address)[:20] + "...")
     print()
-    print("  Bitcoin creates a LOCK on those coins:")
+    print("  The SENDER creates a LOCK on those coins:")
+    print("  (This lock is called the 'locking script' or 'scriptPubKey')")
     print()
     print("  ┌─────────────────────────────────────────────┐")
     print("  │  🔒 These coins are locked!                 │")
@@ -177,11 +178,12 @@ def main():
     print("""
     THE FULL PICTURE:
 
-    When coins are SENT TO YOU:
+    When someone SENDS coins TO YOU:
     ┌────────────────────────────────────────┐
-    │ Bitcoin creates a LOCK:                │
-    │ "Prove you have the secret key that    │
-    │  matches this address"                 │
+    │ The SENDER creates a LOCK:             │
+    │ "These coins can only be spent by      │
+    │  someone who proves they have the      │
+    │  secret key for this address"          │
     └────────────────────────────────────────┘
                      │
                      │ Coins sit here locked
