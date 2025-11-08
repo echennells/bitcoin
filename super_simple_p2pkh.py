@@ -2,7 +2,7 @@
 """
 P2PKH Explained Like You're 5
 
-No stack, no complicated terms, just the core concept.
+Just the core concept.
 """
 
 import hashlib
@@ -161,12 +161,9 @@ def main():
        to unlock the coins
 
 
-    That's it! No stack, no complicated opcodes.
-    Just: Lock → Prove → Unlock
+    That's it! Just: Lock → Prove → Unlock
     """)
 
-    print("=" * 60)
-    print("\nWant the technical details? Run: p2pkh_stack_demo.py")
     print("=" * 60 + "\n")
 
 if __name__ == "__main__":
