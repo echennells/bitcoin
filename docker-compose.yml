@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  bitcoin-demo:
+    build: .
+    image: bitcoin-demo:latest
+    container_name: bitcoin-demo
+    volumes:
+      - ./:/app
+    stdin_open: true
+    tty: true
