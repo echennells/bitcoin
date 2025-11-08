@@ -86,14 +86,24 @@ def main():
 
     print_section("✍️", "STEP 3: YOU WANT TO SPEND THE COINS")
     print()
-    print("  You can't just say \"I own this!\"")
-    print("  You need to PROVE it.")
+    print("  To spend the coins, you need to do TWO things:")
     print()
-    print("  How? With a SIGNATURE!")
+    print("  1️⃣  UNLOCK your coins (prove you own them)")
+    print("      You can't just say \"I own this!\" - you need PROOF.")
+    print("      How? With a SIGNATURE!")
     print()
-    print("  Think of it like signing a check:")
-    print("  • Only YOU can make your signature (you need the SECRET KEY)")
-    print("  • Anyone can verify it's really yours (using your PUBLIC KEY)")
+    print("      Think of it like signing a check:")
+    print("      • Only YOU can make your signature (you need the SECRET KEY)")
+    print("      • Anyone can verify it's really yours (using your PUBLIC KEY)")
+    print()
+    print("  2️⃣  CREATE A NEW LOCK for whoever you're paying")
+    print("      You specify their Bitcoin address, and Bitcoin creates")
+    print("      a NEW locking script that only THEY can unlock")
+    print("      (with their secret key).")
+    print()
+    print("  So every transaction:")
+    print("  • UNLOCKS old coins (your proof)")
+    print("  • LOCKS new coins (for the recipient)")
     print()
 
     input("Press Enter to continue...\n")
@@ -208,9 +218,15 @@ def main():
 
     When YOU SPEND the coins:
     ┌────────────────────────────────────────┐
-    │ You provide:                           │
+    │ You provide (unlocking script):        │
     │  📝 Your signature (proves secret key) │
     │  🔑 Your public key                    │
+    │                                        │
+    │ AND you create a NEW LOCK for the      │
+    │ recipient (locking script):            │
+    │  🔒 "Can only be spent by someone who  │
+    │      has the secret key for address    │
+    │      [recipient's address]"            │
     └────────────────────────────────────────┘
                      │
                      ↓
@@ -219,7 +235,9 @@ def main():
     │  ✓ Public key → address? YES           │
     │  ✓ Signature valid? YES                │
     │                                        │
-    │  🎉 UNLOCK! Coins can move!            │
+    │  🎉 UNLOCK! Coins move to recipient    │
+    │     (locked with the NEW lock you      │
+    │      created for them)                 │
     └────────────────────────────────────────┘
     """)
 
