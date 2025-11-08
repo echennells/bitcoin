@@ -12,6 +12,7 @@ docker-compose run --rm bitcoin-demo
 
 # Run specific scripts
 docker-compose run --rm bitcoin-demo python quick_bitcoin_tools.py
+docker-compose run --rm bitcoin-demo python super_simple_p2pkh.py
 docker-compose run --rm bitcoin-demo python simple_p2pkh_demo.py
 docker-compose run --rm bitcoin-demo python p2pkh_stack_demo.py
 
@@ -47,6 +48,12 @@ docker run --rm -it bitcoin-demo bash
   ```python
   from quick_bitcoin_tools import generate_address, sha256, double_sha256, hash160
   ```
+
+- **super_simple_p2pkh.py** - P2PKH explained like you're 5:
+  - Zero technical jargon
+  - Simple lock/unlock analogy
+  - No stack concepts
+  - Perfect starting point!
 
 - **simple_p2pkh_demo.py** - Beginner-friendly P2PKH explanation:
   - Easy-to-understand visual demonstration
