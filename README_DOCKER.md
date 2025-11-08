@@ -12,6 +12,7 @@ docker-compose run --rm bitcoin-demo
 
 # Run specific scripts
 docker-compose run --rm bitcoin-demo python quick_bitcoin_tools.py
+docker-compose run --rm bitcoin-demo python p2pkh_stack_demo.py
 
 # Get an interactive shell
 docker-compose run --rm bitcoin-demo bash
@@ -45,6 +46,12 @@ docker run --rm -it bitcoin-demo bash
   ```python
   from quick_bitcoin_tools import generate_address, sha256, double_sha256, hash160
   ```
+
+- **p2pkh_stack_demo.py** - Interactive stack-based execution demo:
+  - Step-by-step P2PKH transaction validation
+  - Visual stack operations (OP_DUP, OP_HASH160, OP_EQUALVERIFY, OP_CHECKSIG)
+  - Shows how Bitcoin Script validates transactions
+  - Includes opcode reference
 
 - **bitcoin_visualization.html** - Interactive HTML visualization (open in browser)
 
