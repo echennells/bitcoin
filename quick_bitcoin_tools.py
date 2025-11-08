@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Quick Bitcoin Tools - Simple utilities for Bitcoin lessons
+Quick Bitcoin Tools - Simple utilities for Bitcoin demos
 """
 
 import hashlib
@@ -54,7 +54,7 @@ if __name__ == "__main__":
     print(f"  Public:  {addr_info['public_key'][:66]}...\n")
 
     # Hash examples
-    message = "Bitcoin Lesson Example"
+    message = "Bitcoin Demo Example"
     print(f"Hashing: '{message}'")
     print(f"  SHA256:        {sha256(message)}")
     print(f"  Double-SHA256: {double_sha256(message)}")
