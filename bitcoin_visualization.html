@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Address Generation Visualization</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+        }
+        h1 { color: #f7931a; text-align: center; }
+        h2 { color: #4ec9b0; border-bottom: 2px solid #4ec9b0; padding-bottom: 5px; }
+        .flow-diagram {
+            background: #2d2d2d;
+            border: 2px solid #4ec9b0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .step {
+            background: #3c3c3c;
+            border-left: 4px solid #f7931a;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .step-title {
+            color: #f7931a;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+        }
+        .arrow {
+            text-align: center;
+            color: #4ec9b0;
+            font-size: 1.5em;
+            margin: 5px 0;
+        }
+        .code-box {
+            background: #1e1e1e;
+            border: 1px solid #4ec9b0;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 0.9em;
+        }
+        .highlight { color: #ce9178; }
+        .key { color: #9cdcfe; }
+        .address { color: #4ec9b0; font-weight: bold; }
+        button {
+            background: #f7931a;
+            color: #1e1e1e;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            margin: 10px 5px;
+        }
+        button:hover { background: #ffaa3a; }
+        .result-box {
+            background: #2d2d2d;
+            border: 2px solid #f7931a;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        .hash-demo {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 10px;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .hash-input { text-align: right; }
+        .hash-output { text-align: left; }
+        .hash-arrow { text-align: center; color: #f7931a; font-size: 1.2em; }
+    </style>
+</head>
+<body>
+    <h1>🪙 Bitcoin Address Generation Visualization</h1>
+
+    <h2>📊 Legacy Address (P2PKH) Generation Flow</h2>
+    <div class="flow-diagram">
+        <div class="step">
+            <div class="step-title">Step 1: Generate Private Key (256 bits)</div>
+            <div class="code-box">
+                <span class="key">Private Key:</span> <span class="highlight" id="private-key">Click "Generate" below</span>
+            </div>
+        </div>
+
+        <div class="arrow">⬇️</div>
+
+        <div class="step">
+            <div class="step-title">Step 2: Derive Public Key (ECDSA)</div>
+            <div class="code-box">
+                <span class="key">Public Key:</span> <span class="highlight" id="public-key">...</span>
+            </div>
+        </div>
+
+        <div class="arrow">⬇️</div>
+
+        <div class="step">
+            <div class="step-title">Step 3: Hash Public Key (SHA256 → RIPEMD160)</div>
+            <div class="code-box">
+                <span class="key">Hash160:</span> <span class="highlight" id="hash160">...</span>
+            </div>
+        </div>
+
+        <div class="arrow">⬇️</div>
+
+        <div class="step">
+            <div class="step-title">Step 4: Add Version Byte & Checksum (Base58Check)</div>
+            <div class="code-box">
+                <span class="key">Bitcoin Address:</span> <span class="address" id="address">...</span>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center;">
+        <button onclick="generateAddress()">🔄 Generate New Address</button>
+        <button onclick="demonstrateHashing()">🔒 Show Hash Examples</button>
+    </div>
+
+    <h2>🔐 Bitcoin Hashing Examples</h2>
+    <div id="hash-examples" class="flow-diagram" style="display: none;">
+        <div class="step">
+            <div class="step-title">Input Data</div>
+            <input type="text" id="hash-input" value="Hello Bitcoin!" style="width: 100%; padding: 8px; background: #1e1e1e; border: 1px solid #4ec9b0; color: #d4d4d4; border-radius: 4px;">
+        </div>
+
+        <div class="hash-demo">
+            <div class="hash-input"><strong>SHA256:</strong></div>
+            <div class="hash-arrow">→</div>
+            <div class="hash-output"><code id="sha256-result">...</code></div>
+        </div>
+
+        <div class="hash-demo">
+            <div class="hash-input"><strong>Double SHA256:</strong></div>
+            <div class="hash-arrow">→</div>
+            <div class="hash-output"><code id="double-sha256-result">...</code></div>
+        </div>
+
+        <div class="hash-demo">
+            <div class="hash-input"><strong>Hash160:</strong></div>
+            <div class="hash-arrow">→</div>
+            <div class="hash-output"><code id="hash160-result">...</code></div>
+        </div>
+
+        <button onclick="updateHashes()" style="margin-top: 10px;">Calculate Hashes</button>
+    </div>
+
+    <h2>📋 Address Type Comparison</h2>
+    <div class="flow-diagram">
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr style="background: #3c3c3c;">
+                <th style="padding: 10px; border: 1px solid #4ec9b0;">Type</th>
+                <th style="padding: 10px; border: 1px solid #4ec9b0;">Prefix</th>
+                <th style="padding: 10px; border: 1px solid #4ec9b0;">Example</th>
+                <th style="padding: 10px; border: 1px solid #4ec9b0;">Features</th>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #4ec9b0;"><strong>Legacy (P2PKH)</strong></td>
+                <td style="padding: 10px; border: 1px solid #4ec9b0;">1...</td>
+                <td style="padding: 10px; border: 1px solid #4ec9b0;"><code>1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa</code></td>
+                <td style="padding: 10px; border: 1px solid #4ec9b0;">Original format, higher fees</td>
+            </tr>
+            <tr style="background: #2d2d2d;">
+                <td style="padding: 10px; border: 1px solid #4ec9b0;"><strong>P2SH</strong></td>
+                <td style="padding: 10px; border: 1px solid #4ec9b0;">3...</td>
+                <td style="padding: 10px; border: 1px solid #4ec9b0;"><code>3J98t1WpEZ73CNmYviecrnyiWrnqRhWNLy</code></td>
+                <td style="padding: 10px; border: 1px solid #4ec9b0;">Multisig & scripts</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #4ec9b0;"><strong>SegWit (P2WPKH)</strong></td>
+                <td style="padding: 10px; border: 1px solid #4ec9b0;">bc1q...</td>
+                <td style="padding: 10px; border: 1px solid #4ec9b0;"><code>bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4</code></td>
+                <td style="padding: 10px; border: 1px solid #4ec9b0;">Lower fees, modern</td>
+            </tr>
+            <tr style="background: #2d2d2d;">
+                <td style="padding: 10px; border: 1px solid #4ec9b0;"><strong>Taproot (P2TR)</strong></td>
+                <td style="padding: 10px; border: 1px solid #4ec9b0;">bc1p...</td>
+                <td style="padding: 10px; border: 1px solid #4ec9b0;"><code>bc1p5cyxnuxmeuwuvkwfem96lqzszd02n6xd...</code></td>
+                <td style="padding: 10px; border: 1px solid #4ec9b0;">Enhanced privacy, latest</td>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        async function generateAddress() {
+            try {
+                const response = await fetch('/api/generate');
+                // Since we can't actually run the Python backend, simulate it
+                simulateGeneration();
+            } catch (e) {
+                simulateGeneration();
+            }
+        }
+
+        function simulateGeneration() {
+            // Simulate address generation
+            document.getElementById('private-key').textContent = 'L' + randomHex(50);
+            document.getElementById('public-key').textContent = '02' + randomHex(62);
+            document.getElementById('hash160').textContent = randomHex(40);
+            document.getElementById('address').textContent = '1' + randomBase58(32);
+        }
+
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        async function demonstrateHashing() {
+            const section = document.getElementById('hash-examples');
+            section.style.display = section.style.display === 'none' ? 'block' : 'none';
+            if (section.style.display === 'block') {
+                await updateHashes();
+            }
+        }
+
+        async function updateHashes() {
+            const input = document.getElementById('hash-input').value;
+
+            // SHA256
+            const sha = await sha256(input);
+            document.getElementById('sha256-result').textContent = sha;
+
+            // Double SHA256
+            const doubleSha = await sha256(hexToString(sha));
+            document.getElementById('double-sha256-result').textContent = doubleSha;
+
+            // Note: RIPEMD160 not available in Web Crypto API
+            document.getElementById('hash160-result').textContent = 'RIPEMD160 requires Python script';
+        }
+
+        function hexToString(hex) {
+            let str = '';
+            for (let i = 0; i < hex.length; i += 2) {
+                str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+            }
+            return str;
+        }
+
+        function randomHex(length) {
+            let result = '';
+            const chars = '0123456789abcdef';
+            for (let i = 0; i < length; i++) {
+                result += chars[Math.floor(Math.random() * chars.length)];
+            }
+            return result;
+        }
+
+        function randomBase58(length) {
+            let result = '';
+            const chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+            for (let i = 0; i < length; i++) {
+                result += chars[Math.floor(Math.random() * chars.length)];
+            }
+            return result;
+        }
+
+        // Load initial example
+        window.onload = () => {
+            simulateGeneration();
+        };
+    </script>
+</body>
+</html>
